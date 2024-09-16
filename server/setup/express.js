@@ -1,6 +1,6 @@
 /**
-* Setup Express app.
-*/
+ * Setup Express app.
+ */
 'use strict';
 
 let helmet = require('helmet');
@@ -10,10 +10,10 @@ let express = require('express');
 module.exports = setup;
 
 /**
-* Sets up Express app.
-*
-* @param {Object} app  The express app.
-*/
+ * Sets up Express app.
+ *
+ * @param {Object} app  The express app.
+ */
 function setup(app) {
   app.use(helmet());
   app.use(methodOverride());

@@ -1,15 +1,15 @@
 /**
-* Setup MongoDB.
-*/
+ * Setup MongoDB.
+ */
 'use strict';
 
-let mongoose = require('mongoose');
-const DATABASE_URL = 'mongodb://127.0.0.1:27017/AirportAI-exercise';
+const mongoose = require('mongoose');
+const logger = console;
 
 
 module.exports = (async function() {
 
-  const DATABASE_URL = process.env.DATABASE_URI;
+  const DATABASE_URL = (process.env.DATABASE_URI || 'mongodb://127.0.0.1:27017/AirportAI-exercise');
 
   if (!DATABASE_URL) {
     throw new Error('DATABASE_URL is not set');
@@ -55,4 +55,4 @@ module.exports = (async function() {
     logger.error('MongoDB', 'Unable to connect MongoDB. If problem persists, please restart the server', error);
     return null;
   }
-}());
+})();

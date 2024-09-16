@@ -1,6 +1,6 @@
 /**
-* DB models.
-*/
+ * DB models.
+ */
 'use strict';
 
 module.exports = {};
