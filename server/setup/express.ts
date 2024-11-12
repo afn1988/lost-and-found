@@ -4,6 +4,7 @@
 import helmet from "helmet";
 import methodOverride from "method-override";
 import express, { Express } from "express";
+import cookieParser from "cookie-parser";
 
 /**
  * Sets up Express app.
@@ -16,6 +17,7 @@ function appSetup(app: Express): Express {
   app.use(methodOverride());
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
+  app.use(cookieParser());
 
   return app;
 }

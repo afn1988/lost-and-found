@@ -4,7 +4,10 @@
 import mongoose, { Connection, ConnectOptions } from "mongoose";
 import logger from "../utils/logger";
 
-// Define interface for MongoDB connection events
+/** 
+ * Define interface for MongoDB connection events
+
+ */
 interface MongoConnectionEvents {
   connected: string;
   open: string;
@@ -14,13 +17,18 @@ interface MongoConnectionEvents {
   close: string;
 }
 
-// Define MongoDB connection options interface
+/**
+ * Define MongoDB connection options interface
+ */
 interface MongoConnectionOptions extends ConnectOptions {
   connectTimeoutMS: number;
   serverSelectionTimeoutMS: number;
   maxPoolSize: number;
 }
 
+/**
+ * Initialize MongoDB connection.
+ */
 async function initializeDatabase(): Promise<void> {
   try {
     const connection = await mongoSetup();
@@ -34,6 +42,9 @@ async function initializeDatabase(): Promise<void> {
   }
 }
 
+/**
+ * Setup MongoDB connection.
+ */
 async function mongoSetup() {
   const uri = process.env.MONGODB_URI;
   if (!uri) {

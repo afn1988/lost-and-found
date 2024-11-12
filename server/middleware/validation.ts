@@ -1,9 +1,20 @@
+/**
+ * Validation Middleware 
+ */
+
 import { AnyZodObject, ZodError } from "zod";
 import { Request, Response, NextFunction } from "express";
 import { RequestHandler } from "express";
 
 class ValidationMiddleware {
-  static validateBody(schema: AnyZodObject): RequestHandler {
+  /**
+ * validateBody validates the request body against the schema
+ *
+ * @static
+ * @param {AnyZodObject} schema Zod schema to validate the request body
+ * @returns {RequestHandler}
+ */
+static validateBody(schema: AnyZodObject): RequestHandler {
     return async (
       req: Request,
       res: Response,
@@ -25,7 +36,14 @@ class ValidationMiddleware {
     };
   }
 
-  static validateQuery(schema: AnyZodObject): RequestHandler {
+  /**
+ * validateQuery validates the request query against the schema
+ *
+ * @static
+ * @param {AnyZodObject} schema Zod schema to validate the request query
+ * @returns {RequestHandler}
+ */
+static validateQuery(schema: AnyZodObject): RequestHandler {
     return async (
       req: Request,
       res: Response,
@@ -47,7 +65,14 @@ class ValidationMiddleware {
     };
   }
 
-  static validateParams(schema: AnyZodObject): RequestHandler {
+  /**
+ * validateParams validates the request params against the schema
+ *
+ * @static
+ * @param {AnyZodObject} schema Zod schema to validate the request params
+ * @returns {RequestHandler}
+ */
+static validateParams(schema: AnyZodObject): RequestHandler {
     return async (
       req: Request,
       res: Response,
@@ -69,7 +94,14 @@ class ValidationMiddleware {
     };
   }
 
-  static validate(schema: AnyZodObject): RequestHandler {
+  /**
+ * validate validates the request body, query, and params against the schema
+ *
+ * @static
+ * @param {AnyZodObject} schema Zod schema to validate the request body, query, and params
+ * @returns {RequestHandler}
+ */
+static validate(schema: AnyZodObject): RequestHandler {
     return async (
       req: Request,
       res: Response,
