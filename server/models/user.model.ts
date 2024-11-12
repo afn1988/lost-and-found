@@ -1,14 +1,11 @@
 /**
  * User model.
  */
-
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
+import { User } from "../dto/user.dto";
 
-export interface IUser extends mongoose.Document {
-  email: string;
-  name: string;
-  password: string;
+export interface IUser extends mongoose.Document, User {
   createdAt: Date;
   updatedAt: Date;
   comparePassword(candidatePassword: string): Promise<boolean>;
