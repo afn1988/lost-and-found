@@ -1,12 +1,19 @@
 import { Request, Response } from "express";
-import { LoginUser, User } from "../dto/user.dto";
-import UserModel from "../models/user.model";
+import { LoginUser, User as UserDTO } from "../dto/user.dto";
+import { User as UserModel } from "../models";
 import logger from "../utils/logger";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 
+if (process.env.NODE_ENV === "development") {
+  dotenv.config({ path: "./env/.env.development" });
+} else {
+  dotenv.config({ path: "./env/.env.development" });
+}
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
-const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || "your-refresh-secret-key";
+const JWT_REFRESH_SECRET =
+  process.env.JWT_REFRESH_SECRET || "your-refresh-secret-key";
 const JWT_EXPIRES_IN = "15m";
 const JWT_REFRESH_EXPIRES_IN = "7d";
 
@@ -24,7 +31,7 @@ export const createUserHandler = async (
 ): Promise<void> => {
   try {
     // The data in req.body has already been validated by the middleware
-    const validatedData: User = req.body;
+    const validatedData: UserDTO = req.body;
     // You can safely use the validated data
     const user = new UserModel(validatedData);
     await user.save();
@@ -67,7 +74,7 @@ export const loginUserHandler = async (
     const { email, password }: LoginUser = req.body;
 
     // Check if user exists
-    const user = await UserModel.findOne({ email });
+    const user = await UserModel.findOne({ email }).select("+password");
     if (!user) {
       logger.warn(`Login attempt with non-existent email: ${email}`);
       res.status(401).json({ message: "Invalid credentials" });
@@ -76,12 +83,13 @@ export const loginUserHandler = async (
 
     // Validate password using bcrypt
     const isValidPassword = await bcrypt.compare(password, user.password);
+
     if (!isValidPassword) {
       logger.warn(`Invalid password attempt for email: ${email}`);
       res.status(401).json({ message: "Invalid credentials" });
       return;
     }
-
+    console.log("JWT_SECRET", JWT_SECRET);
     // Generate access token
     const accessToken = jwt.sign(
       {
@@ -101,7 +109,6 @@ export const loginUserHandler = async (
       JWT_REFRESH_SECRET,
       { expiresIn: JWT_REFRESH_EXPIRES_IN }
     );
-
     // Save refresh token in user document
     user.refreshToken = refreshToken;
     await user.save();
@@ -128,7 +135,7 @@ export const loginUserHandler = async (
         email: user.email,
         name: user.name,
       },
-    });// eslint-disable-next-line @typescript-eslint/no-explicit-any
+    }); // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     logger.error(`Error during login: ${error.message}`);
     res.status(500).json({ message: "Error during login" });
@@ -188,8 +195,8 @@ export const refreshTokenHandler = async (
 
     logger.info(`Access token refreshed for user: ${user.email}`);
     res.status(200).json({ message: "Token refreshed successfully" });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-} catch (error: any) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
     logger.error(`Error refreshing token: ${error.message}`);
     res.status(401).json({ message: "Invalid refresh token" });
   }

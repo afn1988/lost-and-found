@@ -1,7 +1,7 @@
 /**
  * User model.
  */
-import mongoose, { Model } from "mongoose";
+import mongoose, { model, Model } from "mongoose";
 import bcrypt from "bcrypt";
 import { User, UserRole } from "../dto/user.dto";
 
@@ -18,7 +18,7 @@ export interface IUser extends mongoose.Document, Omit<User, "password"> {
 /**
  * Create a custom interface for the model to include static methods
  */
-interface IUserModel extends Model<IUser> {
+export interface IUserModel extends Model<IUser> {
   findByEmail(email: string): Promise<IUser | null>;
 }
 
@@ -90,6 +90,6 @@ userSchema.statics.findByEmail = function(email: string) {
   return this.findOne({ email }).exec();
 };
 
-const User = mongoose.model("User", userSchema);
+const User = model<IUser, IUserModel>('User', userSchema);
 
 export default User;

@@ -1,6 +1,10 @@
 /**
  * DB models.
  */
-'use strict';
+import User from './user.model';
+import Product from './product.model';
 
-module.exports = {};
+export {
+    User,
+    Product
+};
