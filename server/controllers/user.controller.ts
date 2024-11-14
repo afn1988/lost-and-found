@@ -1,3 +1,8 @@
+/**
+ * User controllers
+ */
+
+
 import { Request, Response } from "express";
 import { LoginUser, User as UserDTO } from "../dto/user.dto";
 import { User as UserModel } from "../models";
@@ -89,12 +94,11 @@ export const loginUserHandler = async (
       res.status(401).json({ message: "Invalid credentials" });
       return;
     }
-    console.log("JWT_SECRET", JWT_SECRET);
     // Generate access token
     const accessToken = jwt.sign(
       {
         userId: user._id,
-        email: user.email,
+        role: user.role,
       },
       JWT_SECRET,
       { expiresIn: JWT_EXPIRES_IN }
@@ -104,7 +108,7 @@ export const loginUserHandler = async (
     const refreshToken = jwt.sign(
       {
         userId: user._id,
-        email: user.email,
+        role: user.role,
       },
       JWT_REFRESH_SECRET,
       { expiresIn: JWT_REFRESH_EXPIRES_IN }
@@ -179,7 +183,7 @@ export const refreshTokenHandler = async (
     const newAccessToken = jwt.sign(
       {
         userId: user._id,
-        email: user.email,
+        role: user.role,
       },
       JWT_SECRET,
       { expiresIn: JWT_EXPIRES_IN }

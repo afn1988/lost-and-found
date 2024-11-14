@@ -39,12 +39,6 @@ const productSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    category: {
-      type: String,
-      required: true,
-      trim: true,
-      index: true,
-    },
     status: {
       type: String,
       enum: Object.values(ProductStatus),
@@ -77,7 +71,6 @@ const productSchema = new mongoose.Schema(
 // Create indexes for efficient searching
 productSchema.index({ keywords: 1 });
 productSchema.index({ foundTime: 1 });
-productSchema.index({ category: 1, status: 1 });
 
 // Status check methods
 productSchema.methods.isFound = function (): boolean {

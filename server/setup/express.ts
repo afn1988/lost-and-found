@@ -5,7 +5,8 @@ import helmet from "helmet";
 import methodOverride from "method-override";
 import express, { Express } from "express";
 import cookieParser from "cookie-parser";
-
+import swaggerUi from 'swagger-ui-express';  
+import { swaggerSpec } from "./swagger";
 /**
  * Sets up Express app.
  *
@@ -18,8 +19,10 @@ function appSetup(app: Express): Express {
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
   app.use(cookieParser());
+  //app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
   return app;
 }
 
 export default appSetup;
+

@@ -6,10 +6,12 @@ import { Request, Response, NextFunction, RequestHandler } from "express";
 import jwt from "jsonwebtoken";
 import logger from "../utils/logger";
 import { User } from "../models";
+import { UserRole } from "../dto/user.dto";
 
 export interface AuthRequest extends Request {
   user?: {
-    email: string;
+    userId: string;
+    role: UserRole;
   };
 }
 
@@ -33,7 +35,8 @@ export const authenticateJWT: RequestHandler = async (
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET) as {
-      email: string;
+      userId: string,
+      role: UserRole, 
     };
 
     req.user = decoded;
@@ -69,16 +72,16 @@ export const authorizeRole = (roles: string[]): RequestHandler => {
       return;
     }
     try {
-      if (!req.user?.email) {
-        logger.warn("Authorization attempt without email in token");
+      if (!req.user?.userId) {
+        logger.warn("Authorization attempt without ID in token");
         res.status(401).json({ message: "Unauthorized" });
         return;
       }
 
-      const user = await User.findByEmail(req.user.email);
+      const user = await User.findById(req.user.userId);
 
       if (!user) {
-        logger.warn(`User not found for email: ${req.user.email}`);
+        logger.warn(`User not found for email: ${req.user.userId}`);
         res.status(401).json({ message: "User not found" });
         return;
       }
